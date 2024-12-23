@@ -2,7 +2,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Share2, RefreshCw } from "lucide-react";
-import { AnimatePresence } from "framer-motion";
+import {
+   AnimatePresence } from "framer-motion";
 import ChristmasCard from "./ChristmasCard";
 import { Button } from "@/components/ui/button";
 import ShareModal from "./ShareModal";
