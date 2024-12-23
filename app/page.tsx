@@ -12,16 +12,24 @@ import {  useUserStore } from "@/lib/store"
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false)
-
-  const { setUser, setLoading, isLoading , user } = useUserStore()
-
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
+  const { setUser, setLoading, isLoading, user,hydrateUser } = useUserStore()
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [name, setName] = useState("")
   const router = useRouter()
 
   useEffect(() => {
-    setIsMounted(true)
-    
+    if (typeof window !== 'undefined') {
+      setIsMounted(true)
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      })
+      hydrateUser() 
+    }
+  }, [])
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       setShowOnboarding(true)
       if (user) {
@@ -30,32 +38,34 @@ export default function Home() {
         router.push("/")
       }
     }, 4000)
-    
+
     return () => clearTimeout(timer)
-  }, [])
-
-
-  const snowflakes = Array.from({ length: 20 }).map((_, i) => (
-    <motion.div
-      key={i}
-      className="absolute"
-      initial={{ 
-        y: -20, 
-        x: window.innerWidth + Math.random() * 100
-      }}
-      animate={{
-        y: window.innerHeight + 20,
-        x: -20 - Math.random() * 100
-      }}
-      transition={{
-        duration: Math.random() * 5 + 3,
-        repeat: Infinity,
-        ease: "linear",
-      }}
-    >
-      <Snowflake className="text-white/60" size={16} />
-    </motion.div>
-  ))
+  }, [router, user])
+  const generateSnowflakes = () => {
+    if (!isMounted) return []
+    
+    return Array.from({ length: 20 }).map((_, i) => (
+      <motion.div
+        key={i}
+        className="absolute"
+        initial={{ 
+          y: -20, 
+          x: windowSize.width + Math.random() * 100
+        }}
+        animate={{
+          y: windowSize.height + 20,
+          x: -20 - Math.random() * 100
+        }}
+        transition={{
+          duration: Math.random() * 5 + 3,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+      >
+        <Snowflake className="text-white/60" size={16} />
+      </motion.div>
+    ))
+  }
 
   const handleNext = async () => {
     if (!name.trim()) {
@@ -70,18 +80,20 @@ export default function Home() {
         router.push("/home")
       } catch (error) {
         console.error('Error creating user:', error)
-      }finally{
+      } finally {
         setLoading(false)
       }
     }
   }
+
   if (!isMounted) {
     return null
   }
+
   return (
     <div className="relative min-h-screen overflow-hidden font-[family-name:var(--font-geist-sans)]">
       <div className="fixed inset-0 pointer-events-none">
-        {snowflakes}
+      {generateSnowflakes()}
       </div>
 
       <AnimatePresence>

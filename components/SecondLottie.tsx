@@ -1,9 +1,22 @@
 "use client"
+import dynamic from 'next/dynamic'
+import { useEffect, useState } from 'react'
 
-import Lottie from "lottie-react"
+// Dynamically import Lottie with no SSR
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false })
 import animationData from "@/public/ani.json"
 
 export default function SecondLottie() {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) {
+    return null // or a loading placeholder
+  }
+
   return (
     <div className="relative">
       <Lottie
