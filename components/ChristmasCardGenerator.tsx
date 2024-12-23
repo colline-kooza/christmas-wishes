@@ -62,9 +62,9 @@ export default function ChristmasCardGenerator({ userData }: Props) {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex lg:flex-row flex-col md:justify-between justify-center items-center mb-8 md:px-0 px-4">
         <h1 className="text-2xl font-bold text-white">{currentUserName} CHRISTMAS CARD</h1>
-        <div className="space-x-4">
+        <div className="lg:space-x-4 space-x-4 md:mt-0 mt-3 flex justify-center items-center md:px-0 px-5">
         <Button
             asChild
             className="bg-green-800 hover:bg-red-700 text-white"
@@ -86,7 +86,7 @@ export default function ChristmasCardGenerator({ userData }: Props) {
           </Button>
           <Button
             onClick={() => saveStyle()}
-            className="bg-red-600 hover:bg-red-700 text-white"
+            className="bg-red-600 hover:bg-red-700 text-white md:mt-0 mt-4"
             disabled={isPending}
           >
           {
